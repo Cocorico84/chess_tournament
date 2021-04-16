@@ -1,4 +1,4 @@
-class Turn:
+class Round:
     def __init__(self, name, date, start_time, end_time):
         self.name = name
         self.date = date
