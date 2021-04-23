@@ -1,6 +1,6 @@
 from random import shuffle
-from views import view
 from models import match, player, round, tournament
+import itertools
 
 
 def add_player():
@@ -12,15 +12,33 @@ def add_player():
 
 
 def order_players_by_rank(players: list) -> list:
-    return sorted(players, key=lambda x: x.rank)
+    return sorted(players, key=lambda x: x.rank, reverse=True)
 
 
-def get_pairs_from_rank(players: list) -> list:
+def order_players_by_point(players: list) -> list:
+    return sorted(players, key=lambda x: x.point, reverse=True)
+
+
+def get_pairs_by_rank(players: list) -> list:
     pairs_list = []
     list_one = players[:4]
     list_two = players[4:]
     for i, j in zip(list_one, list_two):
-        pairs_list.append([i, j])
+        pairs_list.append((i, j))
+
+    return pairs_list
+
+
+def get_pairs_by_point(players: list, played_pairs: list) -> list:
+    pairs_list = []
+    ref_list = []
+
+    for i in range(8):
+        for j in range(8):
+            if i != j and ((players[i], players[j]) not in played_pairs or (players[j], players[i]) not in played_pairs) and i not in ref_list and j not in ref_list:
+                pairs_list.append((players[i], players[j]))
+                ref_list.append(i)
+                ref_list.append(j)
 
     return pairs_list
 

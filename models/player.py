@@ -6,6 +6,7 @@ class Player:
         self.gender = gender
         self.rank = rank
         self.point = point
+        # self.opponents = []
 
     def __repr__(self):
         return self.first_name

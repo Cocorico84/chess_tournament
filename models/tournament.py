@@ -8,16 +8,14 @@ class TimeControl(Enum):
 
 
 class Tournament:
-    def __init__(self, name, location=None, date=None, rounds=None, players=None, description=None, number_of_turns=4):
+    def __init__(self, name, location=None, date=None, players=None, description=None, time_control=None,
+                 number_of_turns=4):
         self.name = name
         self.location = location
         self.date = date
         self.number_of_turns = number_of_turns
-        self.rounds = rounds
+        self.rounds = []
         self.players = players
-        self.time_control = TimeControl
+        self.time_control = time_control
         self.description = description
-
-    @property
-    def turn(self):
-        return self.rounds + 1
+        self.matches = []
