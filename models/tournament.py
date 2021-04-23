@@ -1,4 +1,5 @@
 from enum import Enum
+from datetime import datetime
 
 
 class TimeControl(Enum):
@@ -8,11 +9,11 @@ class TimeControl(Enum):
 
 
 class Tournament:
-    def __init__(self, name, location=None, date=None, players=None, description=None, time_control=None,
+    def __init__(self, name, location=None, players=None, description=None, time_control=None,
                  number_of_turns=4):
         self.name = name
         self.location = location
-        self.date = date
+        self.date = datetime.now()
         self.number_of_turns = number_of_turns
         self.rounds = []
         self.players = players
