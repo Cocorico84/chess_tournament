@@ -2,6 +2,13 @@ class View:
     def __init__(self):
         pass
 
+    # creation d'un tournoi
+    # creation de joueurs
+    # lancement d'un round
+    # écriture de résultat d'un match
+    # rapport
+    # sauvegarde
+
     def display_players(self, players: list):
         print([player for player in players])
 

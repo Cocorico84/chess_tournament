@@ -1,7 +1,8 @@
 import pandas as pd
-# from tinydb import TinyDB, Query
-#
-# db = TinyDB("../db.json")
+from tinydb import TinyDB
+import json
+
+db = TinyDB("./db.json")
 
 
 def players_alpha_report(players):
@@ -21,4 +22,5 @@ def players_ranking_report(players):
 
 
 def players_from_tournament(db):
-    print(db.all())
+    players_table = db.table("players")
+    print(json.load(players_table.all()))

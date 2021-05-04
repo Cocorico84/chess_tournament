@@ -1,5 +1,5 @@
 from random import shuffle
-from models import match, player, round, tournament
+from models import Player
 from views import view
 from tinydb import TinyDB
 
@@ -17,7 +17,7 @@ class Controller:
         players = []
         for i in range(8):
             name_player = input("Enter player's name: ")
-            players.append(player.Player(first_name=name_player))
+            players.append(Player(first_name=name_player))
         return players
 
     def order_players_by_rank(self, players: list) -> list:
@@ -83,18 +83,17 @@ class Controller:
         self.view.display_left_rounds(tournament.number_of_turns)
 
     def play_a_round(self, players, tournament):
-        if tournament.number_of_turns > 0:
-            players = self.order_players_by_point(players)
-            pairs = self.get_pairs_by_point(players, tournament.matches)
-            tournament.matches.extend(pairs)
-            print({i: pair for i, pair in enumerate(pairs, 0)})
-            choice = int(input("Which match has been played ? "))
-            self.match(pairs[choice])
-            tournament.number_of_matches += 1
-            self.view.display_players(players)
-            self.view.display_points(players)
-            tournament.number_of_turns -= 1
-            self.view.display_left_rounds(tournament.number_of_turns)
+        players = self.order_players_by_point(players)
+        pairs = self.get_pairs_by_point(players, tournament.matches)
+        tournament.matches.extend(pairs)
+        print({i: pair for i, pair in enumerate(pairs, 0)})
+        choice = int(input("Which match has been played ? "))
+        self.match(pairs[choice])
+        tournament.number_of_matches += 1
+        self.view.display_players(players)
+        self.view.display_points(players)
+        tournament.number_of_turns -= 1
+        self.view.display_left_rounds(tournament.number_of_turns)
 
     def save_tournaments(self, tournaments):
         serialized_tournaments = []
