@@ -1,4 +1,5 @@
-from app import App
+from controller import ApplicationController
 
 if __name__ == '__main__':
-    App().start()
+    app = ApplicationController()
+    app.start()

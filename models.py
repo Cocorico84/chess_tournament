@@ -2,8 +2,6 @@ from tinydb import TinyDB
 from enum import Enum
 from datetime import datetime
 
-db = TinyDB("./db.json")
-
 
 class TimeControl(Enum):
     Bullet = 1
@@ -24,6 +22,7 @@ class Player:
         return self.first_name
 
     def save_in_db(self):
+        db = Database().db
         serialized_player = {
             "first_name": self.first_name,
             "last_name": self.last_name,
@@ -52,6 +51,7 @@ class Tournament:
         self.number_of_matches = 0
 
     def save_in_db(self):
+        db = Database().db
         serialized_tournament = {
             "name": self.name,
             "location": self.location,
@@ -83,11 +83,15 @@ class Round:
 
 class Database:
     def __init__(self):
-        self.db = TinyDB('../db.json')
+        self.db = TinyDB('db.json')
 
-    def load_data(self):
+    def load_player_data(self):
+        player_table = self.db.table("players")
+        return player_table.all()
+
+    def load_tournament_data(self):
         tournament_table = self.db.table("tournaments")
-        print(tournament_table.all())
+        return tournament_table.all()
 
 
 class Match:

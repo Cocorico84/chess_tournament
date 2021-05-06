@@ -19,7 +19,7 @@ pip install -r requirements.txt
 ```
 python main.py
 ```
-# Cody Style
+# Code Style
 ```
 flake8 .
 ```
