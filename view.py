@@ -53,13 +53,13 @@ class MatchView:
 class ReportView:
     def __init__(self):
         self._choices = {
-            1: ("All players in alphabetical order", self.players_alpha_report(tournament=None)),
-            2: ("All players in rank order", self.players_ranking_report(tournament=None)),
-            3: ("All players of a tournament in alphabetical order", self.players_alpha_report()),
-            4: ("All players of a tournament in rank order", self.players_ranking_report()),
-            # 5: ("All tournaments", self.get_all_tournaments()),
-            # 6: ("All rounds of a tournament", self.get_rounds_of_tournament()),
-            # 7: ("All matches of a tournament", self.get_matches_of_tournament())
+            1: ("All players in alphabetical order", self.players_alpha_report),
+            2: ("All players in rank order", self.players_ranking_report),
+            3: ("All players of a tournament in alphabetical order", self.players_alpha_report),
+            4: ("All players of a tournament in rank order", self.players_ranking_report),
+            5: ("All tournaments", self.get_all_tournaments),
+            6: ("All rounds of a tournament", self.get_rounds_of_tournament),
+            7: ("All matches of a tournament", self.get_matches_of_tournament)
         }
 
     def _display_choices(self):
@@ -71,33 +71,35 @@ class ReportView:
         choice = input("What is your choice ? ")
         return choice
 
-    def players_alpha_report(self, players=[], tournament=None):
-        for player in sorted(players, key=lambda x: x.last_name):
+    def players_alpha_report(self, db, tournament=None):
+        for player in db.load_player_data():
             print(player)
 
-    def players_ranking_report(self, players=[], tournament=None):
+    def players_ranking_report(self, db, tournament=None):
+        players_table = db.table('players')
+        players = players_table.all()
         for player in sorted(players, key=lambda x: x.rank, reverse=True):
             print({'first_name': player.first_name, 'last_name': player.last_name, 'ranking': player.rank})
-    #
-    # def get_all_tournaments(self, db=None):
-    #     tournaments_table = db.table("tournaments")
-    #     tournaments = tournaments_table.all()
-    #     for tournament in tournaments:
-    #         print(tournament)
-    #
-    # def get_rounds_of_tournament(self, db=None, tournament_choice=None):
-    #     tournaments_table = db.table("tournaments")
-    #     tournament = Query()
-    #     rounds = tournaments_table.search(tournament[tournament_choice])
-    #     for round in rounds:
-    #         print(round)
-    #
-    # def get_matches_of_tournament(self, db=None, tournament_choice=None):
-    #     tournaments_table = db.table("tournaments")
-    #     tournament = Query()
-    #     matches = tournaments_table.search(tournament[tournament_choice])
-    #     for match in matches:
-    #         print(match)
+
+    def get_all_tournaments(self, db=None):
+        tournaments_table = db.table("tournaments")
+        tournaments = tournaments_table.all()
+        for tournament in tournaments:
+            print(tournament)
+
+    def get_rounds_of_tournament(self, db=None, tournament_choice=None):
+        tournaments_table = db.table("tournaments")
+        tournament = Query()
+        rounds = tournaments_table.search(tournament[tournament_choice])
+        for round in rounds:
+            print(round)
+
+    def get_matches_of_tournament(self, db=None, tournament_choice=None):
+        tournaments_table = db.table("tournaments")
+        tournament = Query()
+        matches = tournaments_table.search(tournament[tournament_choice])
+        for match in matches:
+            print(match)
 
 
 class QuitView:

@@ -17,12 +17,13 @@ class Player:
         self.gender = gender
         self.rank = rank
         self.point = point
+        self.db = Database().db
+
 
     def __repr__(self):
         return self.first_name
 
     def save_in_db(self):
-        db = Database().db
         serialized_player = {
             "first_name": self.first_name,
             "last_name": self.last_name,
@@ -31,9 +32,12 @@ class Player:
             "rank": self.rank,
             "point": self.point
         }
-        players_table = db.table('players')
+        players_table = self.db.table('players')
         players_table.insert(serialized_player)
 
+    def get_players(self):
+        players_table = self.db.table('players')
+        players = players_table.all()
 
 class Tournament:
     def __init__(self, name, location=None, description=None, time_control=None,
@@ -85,11 +89,11 @@ class Database:
 
     def load_player_data(self):
         player_table = self.db.table("players")
-        return player_table.all()
+        return [Player(**player) for player in player_table.all()]
 
     def load_tournament_data(self):
         tournament_table = self.db.table("tournaments")
-        return tournament_table.all()
+        return [Tournament(**tournament) for tournament in tournament_table.all()]
 
 
 class Match:

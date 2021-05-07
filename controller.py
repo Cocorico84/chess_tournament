@@ -1,6 +1,6 @@
 from random import shuffle
 
-from models import Tournament, Player, Round
+from models import Tournament, Player, Round,Database
 from utils.menu import Menu
 from view import HomeMenuView, TournamentView, PlayerView, RoundView, MatchView, QuitView, ReportView
 
@@ -38,10 +38,10 @@ class HomeMenuController:
 class CreateTournamentController:
     def __init__(self):
         self.tournament_view = TournamentView()
-        self.tournaments = []
 
     def __call__(self):
-        self.tournaments.append(Tournament(self.tournament_view.get_info()))
+        tournament = Tournament(self.tournament_view.get_info())
+        tournament.save_in_db()
         return HomeMenuController()
 
 
@@ -64,12 +64,8 @@ class AddPlayerController:
 class LaunchRoundController:
     def __init__(self):
         self.round_view = RoundView()
-        self.players = []
-        self.player = AddPlayerController()
-        if len(CreateTournamentController().tournaments) > 0:
-            self.tournament = CreateTournamentController().tournaments[0]
-        else:
-            self.tournament = None
+        self.players = Database().load_player_data()
+        self.tournament = Database().load_player_data()
         self.match = MatchResultController()
         self.report = ReportView()
 
@@ -78,6 +74,8 @@ class LaunchRoundController:
             if len(self.tournament.rounds) < 4:
                 chess_round = Round(name=f"Round {len(self.tournament.rounds) + 1}")
                 self.tournament.rounds.append(chess_round)
+
+
         return HomeMenuController
 
     def get_pairs_by_rank(self, players: list) -> list:
@@ -153,17 +151,18 @@ class ReportController:
     def __init__(self):
         self.report_view = ReportView()
         self.players = []
+        self.db = Database()
 
     def __call__(self):
         choice = self.report_view.report_choice()
-        self.report_view._choices[int(choice)][1]
+        self.report_view._choices[int(choice)][1](self.db)
         return HomeMenuController
 
 
 class SaveController:
     def __int__(self):
-        self.players = AddPlayerController().players
-        self.tournaments = CreateTournamentController().tournaments
+        self.players = Database().load_player_data()
+        self.tournaments = Database().load_tournament_data()
 
     def __call__(self):
         for player in self.players:
