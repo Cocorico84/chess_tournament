@@ -32,7 +32,6 @@ class Player:
             "point": self.point
         }
         players_table = db.table('players')
-        players_table.truncate()
         players_table.insert(serialized_player)
 
 
@@ -65,7 +64,6 @@ class Tournament:
             "number_of_matches": self.number_of_matches
         }
         tournaments_table = db.table('tournaments')
-        tournaments_table.truncate()
         tournaments_table.insert(serialized_tournament)
 
 

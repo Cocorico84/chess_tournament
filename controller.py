@@ -1,7 +1,8 @@
+from random import shuffle
+
+from models import Tournament, Player, Round
 from utils.menu import Menu
 from view import HomeMenuView, TournamentView, PlayerView, RoundView, MatchView, QuitView, ReportView
-from models import Tournament, Player, Round
-from random import shuffle
 
 
 class ApplicationController:
@@ -47,10 +48,10 @@ class CreateTournamentController:
 class AddPlayerController:
     def __init__(self):
         self.player_view = PlayerView()
-        self.players = []
 
     def __call__(self):
-        self.players.append(Player(self.player_view.get_info()))
+        player = Player(self.player_view.get_info())
+        player.save_in_db()
         return HomeMenuController()
 
     def order_players_by_rank(self, players: list) -> list:
@@ -63,13 +64,14 @@ class AddPlayerController:
 class LaunchRoundController:
     def __init__(self):
         self.round_view = RoundView()
-        self.players = AddPlayerController().players
+        self.players = []
         self.player = AddPlayerController()
         if len(CreateTournamentController().tournaments) > 0:
             self.tournament = CreateTournamentController().tournaments[0]
         else:
             self.tournament = None
         self.match = MatchResultController()
+        self.report = ReportView()
 
     def __call__(self):
         if len(self.players) == 8:
@@ -77,8 +79,6 @@ class LaunchRoundController:
                 chess_round = Round(name=f"Round {len(self.tournament.rounds) + 1}")
                 self.tournament.rounds.append(chess_round)
         return HomeMenuController
-
-
 
     def get_pairs_by_rank(self, players: list) -> list:
         pairs_list = []
@@ -114,7 +114,8 @@ class LaunchRoundController:
         return pairs_list
 
     def play_round(self, players, tournament, round):
-        players = self.player.order_players_by_rank(players) if round == 1 else self.player.order_players_by_point(players)
+        players = self.player.order_players_by_rank(players) if round == 1 else self.player.order_players_by_point(
+            players)
         pairs = self.get_pairs_by_rank(players) if round == 1 else self.get_pairs_by_point(players)
 
         self.tournament.matches.extend(pairs)
@@ -123,9 +124,9 @@ class LaunchRoundController:
         choice = self.round_view.get_match_played()
         self.match(pairs[choice])
         tournament.number_of_matches += 1
-        # display players and rank
+        self.report.players_alpha_report(self.players, self.tournament)
         tournament.number_of_turns -= 1
-        # display left rounds
+        self.report.get_rounds_of_tournament()
 
 
 class MatchResultController:
@@ -151,7 +152,7 @@ class MatchResultController:
 class ReportController:
     def __init__(self):
         self.report_view = ReportView()
-        self.players = AddPlayerController().players
+        self.players = []
 
     def __call__(self):
         choice = self.report_view.report_choice()
@@ -161,8 +162,8 @@ class ReportController:
 
 class SaveController:
     def __int__(self):
-        self.players = AddPlayerController()
-        self.tournaments = CreateTournamentController()
+        self.players = AddPlayerController().players
+        self.tournaments = CreateTournamentController().tournaments
 
     def __call__(self):
         for player in self.players:

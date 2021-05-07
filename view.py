@@ -1,3 +1,6 @@
+from tinydb import Query
+
+
 class HomeMenuView:
     def __init__(self, menu):
         self.menu = menu
@@ -54,9 +57,9 @@ class ReportView:
             2: ("All players in rank order", self.players_ranking_report(tournament=None)),
             3: ("All players of a tournament in alphabetical order", self.players_alpha_report()),
             4: ("All players of a tournament in rank order", self.players_ranking_report()),
-            5: ("All tournaments", self.get_all_tournaments()),
-            6: ("All rounds of a tournament", self.get_rounds_of_tournament()),
-            7: ("All matches of a tournament", self.get_matches_of_tournament())
+            # 5: ("All tournaments", self.get_all_tournaments()),
+            # 6: ("All rounds of a tournament", self.get_rounds_of_tournament()),
+            # 7: ("All matches of a tournament", self.get_matches_of_tournament())
         }
 
     def _display_choices(self):
@@ -75,15 +78,26 @@ class ReportView:
     def players_ranking_report(self, players=[], tournament=None):
         for player in sorted(players, key=lambda x: x.rank, reverse=True):
             print({'first_name': player.first_name, 'last_name': player.last_name, 'ranking': player.rank})
-
-    def get_all_tournaments(self):
-        pass
-
-    def get_rounds_of_tournament(self):
-        pass
-
-    def get_matches_of_tournament(self):
-        pass
+    #
+    # def get_all_tournaments(self, db=None):
+    #     tournaments_table = db.table("tournaments")
+    #     tournaments = tournaments_table.all()
+    #     for tournament in tournaments:
+    #         print(tournament)
+    #
+    # def get_rounds_of_tournament(self, db=None, tournament_choice=None):
+    #     tournaments_table = db.table("tournaments")
+    #     tournament = Query()
+    #     rounds = tournaments_table.search(tournament[tournament_choice])
+    #     for round in rounds:
+    #         print(round)
+    #
+    # def get_matches_of_tournament(self, db=None, tournament_choice=None):
+    #     tournaments_table = db.table("tournaments")
+    #     tournament = Query()
+    #     matches = tournaments_table.search(tournament[tournament_choice])
+    #     for match in matches:
+    #         print(match)
 
 
 class QuitView:
