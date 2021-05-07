@@ -32,21 +32,16 @@ class PlayerView:
         return player_name
 
 
-class RoundView:
-    def __init__(self):
-        self.pairs = []
-
-    def _display_matches(self):
-        print({i: pair for i, pair in enumerate(self.pairs, 0)})
+class MatchView:
+    def _display_matches(self, pairs):
+        print({i: pair for i, pair in enumerate(pairs, 0)})
 
     def get_match_played(self):
         choice = int(input("Which match has been played ? "))
         return choice
 
-
-class MatchView:
     def get_the_winner(self):
-        winner = input("Who's the winner ? ")
+        winner = int(input("Who's the winner ? "))
         return winner
 
 
@@ -72,19 +67,18 @@ class ReportView:
         return choice
 
     def players_alpha_report(self, db, tournament=None):
-        for player in db.load_player_data():
+        '''
+        assure all players have a last name
+        '''
+        for player in sorted(db.load_player_data(), key=lambda x: x.last_name):
             print(player)
 
     def players_ranking_report(self, db, tournament=None):
-        players_table = db.table('players')
-        players = players_table.all()
-        for player in sorted(players, key=lambda x: x.rank, reverse=True):
+        for player in sorted(db.load_player_data(), key=lambda x: x.rank, reverse=True):
             print({'first_name': player.first_name, 'last_name': player.last_name, 'ranking': player.rank})
 
     def get_all_tournaments(self, db=None):
-        tournaments_table = db.table("tournaments")
-        tournaments = tournaments_table.all()
-        for tournament in tournaments:
+        for tournament in db.load_tournament_data():
             print(tournament)
 
     def get_rounds_of_tournament(self, db=None, tournament_choice=None):

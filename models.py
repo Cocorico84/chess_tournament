@@ -19,7 +19,6 @@ class Player:
         self.point = point
         self.db = Database().db
 
-
     def __repr__(self):
         return self.first_name
 
@@ -35,9 +34,6 @@ class Player:
         players_table = self.db.table('players')
         players_table.insert(serialized_player)
 
-    def get_players(self):
-        players_table = self.db.table('players')
-        players = players_table.all()
 
 class Tournament:
     def __init__(self, name, location=None, description=None, time_control=None,
@@ -52,6 +48,9 @@ class Tournament:
         self.description = description
         self.matches = []
         self.number_of_matches = 0
+
+    def __repr__(self):
+        return self.name
 
     def save_in_db(self):
         db = Database().db

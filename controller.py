@@ -1,8 +1,8 @@
 from random import shuffle
 
-from models import Tournament, Player, Round,Database
+from models import Tournament, Player, Round, Database
 from utils.menu import Menu
-from view import HomeMenuView, TournamentView, PlayerView, RoundView, MatchView, QuitView, ReportView
+from view import HomeMenuView, TournamentView, PlayerView, MatchView, QuitView, ReportView
 
 
 class ApplicationController:
@@ -54,29 +54,47 @@ class AddPlayerController:
         player.save_in_db()
         return HomeMenuController()
 
+
+class LaunchRoundController:
+    def __init__(self):
+        self.tournament = Database().load_tournament_data()[0]
+        self.match = MatchResultController()
+
+    def __call__(self):
+        round = Round(name=f"Round {len(self.tournament.rounds) + 1}")
+        self.tournament.rounds.append(round)
+        return HomeMenuController
+
+
+class MatchResultController:
+    def __init__(self):
+        self.match_view = MatchView()
+        self.players = Database().load_player_data()
+
+    def __call__(self):
+        players = self.order_players_by_rank(self.players) if round == 1 else self.order_players_by_point(self.players)
+        pairs = self.get_pairs_by_rank(self.players) if round == 1 else self.get_pairs_by_point(players, self.get_pairs(self.players))
+
+        self.match_view._display_matches(pairs)
+        pair = self.match_view.get_match_played()
+        winner = self.match_view.get_the_winner()
+        self.match(pairs[pair], winner)
+        return HomeMenuController
+
+    def match(self, pair, winner):
+        if winner == pair[0].first_name:
+            pair[0].point += 1
+        elif winner == pair[1].first_name:
+            pair[1].point += 1
+        else:
+            pair[0].point += 0.5
+            pair[1].point += 0.5
+
     def order_players_by_rank(self, players: list) -> list:
         return sorted(players, key=lambda x: x.rank, reverse=True)
 
     def order_players_by_point(self, players: list) -> list:
         return sorted(players, key=lambda x: x.point, reverse=True)
-
-
-class LaunchRoundController:
-    def __init__(self):
-        self.round_view = RoundView()
-        self.players = Database().load_player_data()
-        self.tournament = Database().load_player_data()
-        self.match = MatchResultController()
-        self.report = ReportView()
-
-    def __call__(self):
-        if len(self.players) == 8:
-            if len(self.tournament.rounds) < 4:
-                chess_round = Round(name=f"Round {len(self.tournament.rounds) + 1}")
-                self.tournament.rounds.append(chess_round)
-
-
-        return HomeMenuController
 
     def get_pairs_by_rank(self, players: list) -> list:
         pairs_list = []
@@ -108,43 +126,16 @@ class LaunchRoundController:
         shuffle(players)
         for i in range(0, len(players), 2):
             pairs_list.append(players[i:i + 2])
-
         return pairs_list
 
-    def play_round(self, players, tournament, round):
-        players = self.player.order_players_by_rank(players) if round == 1 else self.player.order_players_by_point(
-            players)
-        pairs = self.get_pairs_by_rank(players) if round == 1 else self.get_pairs_by_point(players)
+    # def play_round(self, players, tournament, round):
 
-        self.tournament.matches.extend(pairs)
-        self.round_view._display_matches()
-
-        choice = self.round_view.get_match_played()
-        self.match(pairs[choice])
-        tournament.number_of_matches += 1
-        self.report.players_alpha_report(self.players, self.tournament)
-        tournament.number_of_turns -= 1
-        self.report.get_rounds_of_tournament()
-
-
-class MatchResultController:
-    def __init__(self):
-        self.match_view = MatchView()
-        self.pairs = None
-
-    def __call__(self):
-        winner = self.match_view.get_the_winner(self.pair)
-        self.match(self.pair, winner)
-        return HomeMenuController
-
-    def match(self, pair, winner):
-        if winner == pair[0].first_name:
-            pair[0].point += 1
-        elif winner == pair[1].first_name:
-            pair[1].point += 1
-        else:
-            pair[0].point += 0.5
-            pair[1].point += 0.5
+    #     tournament.matches.extend(pairs)
+    #     self.match.match(pairs[choice], self.winner)
+    #     tournament.number_of_matches += 1
+    #     # self.report.players_alpha_report(players, self.tournament)
+    #     tournament.number_of_turns -= 1
+    #     # self.report.get_rounds_of_tournament()
 
 
 class ReportController:
