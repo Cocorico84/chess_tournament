@@ -36,7 +36,7 @@ class Player:
 
 
 class Tournament:
-    def __init__(self, name, location=None, description=None, time_control=None,
+    def __init__(self, name, location=None, date=None, rounds=None, players=None, matches=None, description=None, time_control=None,
                  number_of_turns=4):
         self.name = name
         self.location = location
@@ -47,7 +47,6 @@ class Tournament:
         self.time_control = time_control
         self.description = description
         self.matches = []
-        self.number_of_matches = 0
 
     def __repr__(self):
         return self.name
@@ -64,7 +63,6 @@ class Tournament:
             "time_control": self.time_control,
             "description": self.description,
             "matches": self.matches,
-            "number_of_matches": self.number_of_matches
         }
         tournaments_table = db.table('tournaments')
         tournaments_table.insert(serialized_tournament)
@@ -83,8 +81,8 @@ class Round:
 
 
 class Database:
-    def __init__(self):
-        self.db = TinyDB('db.json')
+    def __init__(self, filename: str = "db.json"):
+        self.db = TinyDB(filename)
 
     def load_player_data(self):
         player_table = self.db.table("players")
@@ -92,7 +90,8 @@ class Database:
 
     def load_tournament_data(self):
         tournament_table = self.db.table("tournaments")
-        return [Tournament(**tournament) for tournament in tournament_table.all()]
+        return {tournament['name']: Tournament(**tournament) for tournament in tournament_table.all()}
+        # return [Tournament(**tournament) for tournament in tournament_table.all()]
 
 
 class Match:

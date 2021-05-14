@@ -6,7 +6,7 @@ class HomeMenuView:
         self.menu = menu
 
     def _display_menu(self):
-        print("\nAccueil de notre jeu:")
+        print("\nWelcome to our chess manager:")
         for key, entry in self.menu.items():
             print(f"{key}: {entry.option}")
 
@@ -26,10 +26,22 @@ class TournamentView:
 
 
 class PlayerView:
-    def get_info(self):
-        player_name = input("What is the name of the player ? ")
-        print(f'The player "{player_name}" is created')
-        return player_name
+    def add_player(self):
+        choice = input("Add a player in the database ? Y/N ")
+        if choice == 'Y':
+            player_name = input("What is the name of the player ? ")
+            print(f'The player "{player_name}" is created')
+            return player_name
+        else:
+            existing_player_choice = input("Do you want to add an existing player in a tournament ? Y/N ")
+            if existing_player_choice == 'Y':
+                player_name = input("What is the name of the player ? ")
+                return player_name
+
+    def add_player_into_tournament(self):
+        tournament = input("Which tournament is the player in ? ")
+        print(f'The player has been added in "{tournament}" tournament')
+        return tournament
 
 
 class MatchView:
@@ -40,9 +52,22 @@ class MatchView:
         choice = int(input("Which match has been played ? "))
         return choice
 
+    def _ask_if_draw(self):
+        draw = input("Is it a draw ? Y/N ")
+        return draw
+
     def get_the_winner(self):
         winner = int(input("Who's the winner ? "))
         return winner
+
+
+class RoundView:
+    def __call__(self):
+        print("The round has been created")
+
+    def get_tournament_choice(self):
+        choice = input("Which tournament do you want to launch round ? ")
+        return choice
 
 
 class ReportView:
@@ -94,6 +119,11 @@ class ReportView:
         matches = tournaments_table.search(tournament[tournament_choice])
         for match in matches:
             print(match)
+
+
+class SaveView:
+    pass
+    # connaître les joueurs liés à ce tournoi
 
 
 class QuitView:

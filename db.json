@@ -1,1 +1,127 @@
-{"players": {"1": {"first_name": "b", "last_name": "he", "birth": null, "gender": null, "rank": 0, "point": 0}, "2": {"first_name": "a", "last_name": "aa", "birth": null, "gender": null, "rank": 0, "point": 0}, "3": {"first_name": "c", "last_name": "ll", "birth": null, "gender": null, "rank": 0, "point": 0}, "4": {"first_name": "d", "last_name": "pp", "birth": null, "gender": null, "rank": 0, "point": 0}, "5": {"first_name": "e", "last_name": "nm", "birth": null, "gender": null, "rank": 0, "point": 0}, "6": {"first_name": "p", "last_name": null, "birth": null, "gender": null, "rank": 0, "point": 0}, "7": {"first_name": "n", "last_name": null, "birth": null, "gender": null, "rank": 0, "point": 0}, "8": {"first_name": "j", "last_name": null, "birth": null, "gender": null, "rank": 0, "point": 0}}, "tournaments": {"1": {"name": "test", "location": null, "number_of_turns": 4, "time_control": null, "description": null}}}
+{
+  "players": {
+    "1": {
+      "first_name": "b",
+      "last_name": "he",
+      "birth": null,
+      "gender": null,
+      "rank": 10,
+      "point": 0
+    },
+    "2": {
+      "first_name": "a",
+      "last_name": "aa",
+      "birth": null,
+      "gender": null,
+      "rank": 20,
+      "point": 0
+    },
+    "3": {
+      "first_name": "c",
+      "last_name": "ll",
+      "birth": null,
+      "gender": null,
+      "rank": 40,
+      "point": 0
+    },
+    "4": {
+      "first_name": "d",
+      "last_name": "pp",
+      "birth": null,
+      "gender": null,
+      "rank": 0,
+      "point": 0
+    },
+    "5": {
+      "first_name": "e",
+      "last_name": "nm",
+      "birth": null,
+      "gender": null,
+      "rank": 90,
+      "point": 0
+    },
+    "6": {
+      "first_name": "p",
+      "last_name": null,
+      "birth": null,
+      "gender": null,
+      "rank": 200,
+      "point": 0
+    },
+    "7": {
+      "first_name": "n",
+      "last_name": null,
+      "birth": null,
+      "gender": null,
+      "rank": 150,
+      "point": 0
+    },
+    "8": {
+      "first_name": "j",
+      "last_name": null,
+      "birth": null,
+      "gender": null,
+      "rank": 0,
+      "point": 0
+    },
+    "9": {
+      "first_name": "gazorby",
+      "last_name": null,
+      "birth": null,
+      "gender": null,
+      "rank": 0,
+      "point": 0
+    },
+    "10": {
+      "first_name": "babar",
+      "last_name": null,
+      "birth": null,
+      "gender": null,
+      "rank": 0,
+      "point": 0
+    }
+  },
+  "tournaments": {
+    "1": {
+      "name": "hello",
+      "location": null,
+      "date": "2021-05-08T13:06:24.365661",
+      "number_of_turns": 4,
+      "rounds": [
+        {
+          "1": [
+            [
+              10,
+              4
+            ],
+            [
+              1,
+              5
+            ],
+            [
+              2,
+              6
+            ],
+            [
+              3,
+              7
+            ]
+          ]
+        }
+      ],
+      "players": [
+        10,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "time_control": null,
+      "description": null,
+      "matches": []
+    }
+  }
+}
