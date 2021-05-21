@@ -174,17 +174,28 @@ class Round:
             add('point', 0.5),
             doc_ids=pair_ids)
 
+    def matches_not_played(self, pairs):
+        matches_not_played = []
+        for pair in pairs:
+            if pair not in self.tournament['matches']:
+                matches_not_played.append(pair)
+        return matches_not_played
+
 
 class Database:
+    def __init__(self):
+        self.tournaments = db.table('tournaments')
+        self.players = db.table('players')
+
     def get_report(self, choice_number, tournament_name=None):
         if choice_number == 1:
             return self.players_alpha_report()
         elif choice_number == 2:
             return self.players_ranking_report()
         elif choice_number == 3:
-            return self.players_alpha_report()
+            return self.players_alpha_report(tournament_name)
         elif choice_number == 4:
-            return self.players_ranking_report()
+            return self.players_ranking_report(tournament_name)
         elif choice_number == 5:
             return self.get_all_tournaments()
         elif choice_number == 6:
@@ -200,15 +211,27 @@ class Database:
         tournament_table = db.table("tournaments")
         return [Tournament(**tournament) for tournament in tournament_table.all()]
 
-    def players_alpha_report(self):
+    def players_alpha_report(self, tournament=None):
         '''
         assure all players have a last name
         '''
-        for player in sorted(self.load_player_data(), key=lambda x: x.first_name):
+        if tournament is not None:
+            tournament_players = self.tournaments.get(where('name') == tournament)['players']
+            players = [Player(**player) for player in self.players if player.doc_id in tournament_players]
+        else:
+            players = self.load_player_data()
+
+        for player in sorted(players, key=lambda x: x.first_name):
             print({'first_name': player.first_name, 'last_name': player.last_name, 'point': player.point})
 
-    def players_ranking_report(self):
-        for player in sorted(self.load_player_data(), key=lambda x: x.rank, reverse=True):
+    def players_ranking_report(self, tournament=None):
+        if tournament is not None:
+            tournament_players = self.tournaments.get(where('name') == tournament)['players']
+            players = [Player(**player) for player in self.players if player.doc_id in tournament_players]
+        else:
+            players = self.load_player_data()
+
+        for player in sorted(players, key=lambda x: x.rank, reverse=True):
             print({'first_name': player.first_name, 'last_name': player.last_name, 'ranking': player.rank})
 
     def get_all_tournaments(self):
@@ -227,7 +250,7 @@ class Database:
         tournaments = loads(dumps(tournaments_table.all()))
         for tournament in tournaments:
             if tournament['name'] == tournament_name:
-                print(flatten_list(tournament['matches']))
+                print(tournament['matches'])
 
 
 class Match:

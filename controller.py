@@ -79,21 +79,18 @@ class MatchResultController:
         round_is_over = self.round_view.round_over()
 
         if round_is_over:
-
             pairs = self.round.sorted_pairs(self.players)
-            print(pairs)
-            self.round.add_matches_in_tournament(pairs, tournament_choice)
             self.round.save_pairs_in_db(tournament_choice, pairs)
         else:
             pairs = flatten_list(list(self.round.tournament['rounds'][-1].values()))
 
+        pairs = self.round.matches_not_played(pairs)
         self.match_view.display_matches(pairs)
 
         pair_played_choice = self.match_view.get_match_played()
         pair = pairs[pair_played_choice]
+        self.round.add_matches_in_tournament(pair, tournament_choice)
 
-        # TODO supprimer la pair qui a été sortie
-        print(pair)
         draw = self.match_view.ask_if_draw()
 
         if draw == 'N':
@@ -112,7 +109,7 @@ class ReportController:
 
     def __call__(self):
         choice = self.report_view.report_choice()
-        if choice < 6:
+        if choice in [1, 2, 5]:
             self.db.get_report(choice)
         else:
             tournament_choice = self.report_view.get_tournament_choice()

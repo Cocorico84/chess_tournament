@@ -140,5 +140,3 @@ dmypy.json
 cython_debug/
 
 flake8-report/
-
-test.py

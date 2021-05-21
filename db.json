@@ -14,7 +14,7 @@
       "birth": null,
       "gender": null,
       "rank": 20,
-      "point": 3.0
+      "point": 4.0
     },
     "3": {
       "first_name": "c",
@@ -30,7 +30,7 @@
       "birth": null,
       "gender": null,
       "rank": 0,
-      "point": 3.5
+      "point": 4.0
     },
     "5": {
       "first_name": "e",
@@ -38,7 +38,7 @@
       "birth": null,
       "gender": null,
       "rank": 90,
-      "point": 3.0
+      "point": 3.5
     },
     "6": {
       "first_name": "p",
@@ -46,7 +46,7 @@
       "birth": null,
       "gender": null,
       "rank": 200,
-      "point": 1.5
+      "point": 2.0
     },
     "7": {
       "first_name": "n",
@@ -54,7 +54,7 @@
       "birth": null,
       "gender": null,
       "rank": 150,
-      "point": 1.0
+      "point": 1.5
     },
     "8": {
       "first_name": "j",
@@ -115,26 +115,6 @@
               10
             ]
           ]
-        },
-        {
-          "2": [
-            [
-              6,
-              2
-            ],
-            [
-              7,
-              1
-            ],
-            [
-              5,
-              4
-            ],
-            [
-              3,
-              10
-            ]
-          ]
         }
       ],
       "players": [
@@ -151,40 +131,16 @@
       "description": null,
       "matches": [
         [
-          [
-            4,
-            7
-          ],
-          [
-            2,
-            3
-          ],
-          [
-            5,
-            6
-          ],
-          [
-            1,
-            10
-          ]
+          4,
+          7
         ],
         [
-          [
-            6,
-            2
-          ],
-          [
-            7,
-            1
-          ],
-          [
-            5,
-            4
-          ],
-          [
-            3,
-            10
-          ]
+          2,
+          3
+        ],
+        [
+          5,
+          6
         ]
       ]
     },
