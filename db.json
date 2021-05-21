@@ -6,7 +6,7 @@
       "birth": null,
       "gender": null,
       "rank": 10,
-      "point": 0
+      "point": 3.5
     },
     "2": {
       "first_name": "a",
@@ -14,7 +14,7 @@
       "birth": null,
       "gender": null,
       "rank": 20,
-      "point": 0
+      "point": 3.0
     },
     "3": {
       "first_name": "c",
@@ -22,7 +22,7 @@
       "birth": null,
       "gender": null,
       "rank": 40,
-      "point": 0
+      "point": 2.5
     },
     "4": {
       "first_name": "d",
@@ -30,7 +30,7 @@
       "birth": null,
       "gender": null,
       "rank": 0,
-      "point": 0
+      "point": 3.5
     },
     "5": {
       "first_name": "e",
@@ -38,7 +38,7 @@
       "birth": null,
       "gender": null,
       "rank": 90,
-      "point": 0
+      "point": 3.0
     },
     "6": {
       "first_name": "p",
@@ -46,7 +46,7 @@
       "birth": null,
       "gender": null,
       "rank": 200,
-      "point": 0
+      "point": 1.5
     },
     "7": {
       "first_name": "n",
@@ -54,7 +54,7 @@
       "birth": null,
       "gender": null,
       "rank": 150,
-      "point": 0
+      "point": 1.0
     },
     "8": {
       "first_name": "j",
@@ -78,6 +78,14 @@
       "birth": null,
       "gender": null,
       "rank": 0,
+      "point": 5.0
+    },
+    "11": {
+      "first_name": "coco",
+      "last_name": "rico",
+      "birth": null,
+      "gender": null,
+      "rank": 0,
       "point": 0
     }
   },
@@ -91,20 +99,40 @@
         {
           "1": [
             [
-              10,
-              4
-            ],
-            [
-              1,
-              5
+              4,
+              7
             ],
             [
               2,
+              3
+            ],
+            [
+              5,
               6
             ],
             [
+              1,
+              10
+            ]
+          ]
+        },
+        {
+          "2": [
+            [
+              6,
+              2
+            ],
+            [
+              7,
+              1
+            ],
+            [
+              5,
+              4
+            ],
+            [
               3,
-              7
+              10
             ]
           ]
         }
@@ -118,6 +146,56 @@
         5,
         6,
         7
+      ],
+      "time_control": null,
+      "description": null,
+      "matches": [
+        [
+          [
+            4,
+            7
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            5,
+            6
+          ],
+          [
+            1,
+            10
+          ]
+        ],
+        [
+          [
+            6,
+            2
+          ],
+          [
+            7,
+            1
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            3,
+            10
+          ]
+        ]
+      ]
+    },
+    "2": {
+      "name": "papa",
+      "location": null,
+      "date": "2021-05-17T19:27:48.831416",
+      "number_of_turns": 4,
+      "rounds": [],
+      "players": [
+        11
       ],
       "time_control": null,
       "description": null,
