@@ -5,7 +5,6 @@ from utils.utils import flatten_list
 
 db = TinyDB('db.json')
 
-
 players_table = db.table('players')
 # player = Player(first_name='coco')
 
@@ -15,4 +14,4 @@ players_table = db.table('players')
 #     if i.doc_id in pair:
 #         print({i.doc_id: (i['first_name'], i['last_name'])})
 #
-print(sum([[1, 10]],[]))
+print(sum([[1, 10]], []))

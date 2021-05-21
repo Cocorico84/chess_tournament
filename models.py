@@ -174,7 +174,7 @@ class Round:
             add('point', 0.5),
             doc_ids=pair_ids)
 
-    def matches_not_played(self, pairs):
+    def matches_not_played(self, pairs: list) -> list:
         matches_not_played = []
         for pair in pairs:
             if pair not in self.tournament['matches']:
@@ -208,11 +208,11 @@ class Database:
         elif choice_number == 7:
             return self.get_matches_of_tournament(tournament_name)
 
-    def load_player_data(self):
+    def load_player_data(self) -> list:
         player_table = db.table("players")
         return [Player(**player) for player in player_table.all()]
 
-    def load_tournament_data(self):
+    def load_tournament_data(self) -> list:
         tournament_table = db.table("tournaments")
         return [Tournament(**tournament) for tournament in tournament_table.all()]
 
