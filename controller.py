@@ -85,7 +85,7 @@ class MatchResultController:
             pairs = flatten_list(list(self.round.tournament['rounds'][-1].values()))
 
         pairs = self.round.matches_not_played(pairs)
-        self.match_view.display_matches(pairs)
+        self.match_view.display_matches(self.round.get_name_from_ids(pairs))
 
         pair_played_choice = self.match_view.get_match_played()
         pair = pairs[pair_played_choice]

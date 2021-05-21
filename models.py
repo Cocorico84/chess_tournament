@@ -181,6 +181,11 @@ class Round:
                 matches_not_played.append(pair)
         return matches_not_played
 
+    def get_name_from_ids(self, pair):
+        pair = flatten_list(pair)
+        return [{player.doc_id: f"{player['first_name']} {player['last_name']}"} for player in db.table('players') if
+                player.doc_id in pair]
+
 
 class Database:
     def __init__(self):
