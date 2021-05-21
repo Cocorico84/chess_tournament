@@ -256,9 +256,3 @@ class Database:
         for tournament in tournaments:
             if tournament['name'] == tournament_name:
                 print(tournament['matches'])
-
-
-class Match:
-    def __init__(self, pair, result):
-        self.pair = pair
-        self.result = result
