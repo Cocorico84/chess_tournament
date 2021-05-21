@@ -47,6 +47,12 @@ class Player:
             if player['first_name'] == self.first_name and player['last_name'] == self.last_name:
                 return player
 
+    def update_rank(self, rank):
+        players_table = db.table('players')
+        for player in players_table.all():
+            if player['first_name'] == self.first_name and player['last_name'] == self.last_name:
+                players_table.update({'rank': rank})
+
 
 class Tournament:
     def __init__(self, name, location=None, date=None, rounds=None, players=None, matches=None, description=None,
@@ -227,7 +233,7 @@ class Database:
             players = self.load_player_data()
 
         for player in sorted(players, key=lambda x: x.first_name):
-            print({'first_name': player.first_name, 'last_name': player.last_name, 'point': player.point})
+            print({'first_name': player.first_name, 'last_name': player.last_name, 'rank': player.rank})
 
     def players_ranking_report(self, tournament=None):
         if tournament is not None:

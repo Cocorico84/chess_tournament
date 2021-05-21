@@ -18,8 +18,10 @@ class HomeMenuView:
 class TournamentView:
     def get_info(self):
         tournament_name = input("What name do you want to call it ? ")
+        tournament_location = input("Where is the location of your tournament ?")
+        tournament_round = int(input("How many rounds do you want ? "))
         print(f'Your tournament called "{tournament_name}" is created')
-        return tournament_name
+        return tournament_name, tournament_location, tournament_round
 
 
 class PlayerView:
@@ -28,8 +30,10 @@ class PlayerView:
         if choice == 'Y':
             player_first_name = input("What is the first name of the player ? ")
             player_last_name = input("What is the last name of the player ? ")
+            player_birth = input("What is the birth ? DD-MM-YYYY")
+            player_gender = input("What is the gender of the player ?")
             print(f'The player "{player_first_name} {player_last_name}" is created')
-            return player_first_name, player_last_name
+            return player_first_name, player_last_name, player_birth, player_gender
         else:
             existing_player_choice = input("Do you want to add an existing player in a tournament ? Y/N ")
             if existing_player_choice == 'Y':
@@ -41,6 +45,13 @@ class PlayerView:
         tournament = input("Which tournament is the player in ? ")
         print(f'The player has been added in "{tournament}" tournament')
         return tournament
+
+    def get_first_name_last_name(self):
+        player_first_name = input("What is the first name of the player ? ")
+        player_last_name = input("What is the last name of the player ? ")
+        player_rank = int(input("What is his current rank ? "))
+        print(f"The rank of player {player_first_name} {player_last_name} is {player_rank}")
+        return player_first_name, player_last_name, player_rank
 
 
 class MatchView:
