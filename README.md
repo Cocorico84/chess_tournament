@@ -7,6 +7,7 @@ List of possible actions:
 - Create a tournament
 - Add players in the tournament
 - Write match results
+- Change the rank of a player
 - Get a report
 
 You can launch a tournament only if there are 8 recorded players in the tournament.

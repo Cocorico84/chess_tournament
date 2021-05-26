@@ -4,7 +4,7 @@ from json import dumps, loads
 from random import shuffle
 
 from tinydb import TinyDB, where
-from tinydb.operations import add
+from tinydb.operations import add, set
 
 from utils.utils import flatten_list, order_players_by_key
 
@@ -49,14 +49,16 @@ class Player:
 
     def update_rank(self, rank):
         players_table = db.table('players')
-        for player in players_table.all():
-            if player['first_name'] == self.first_name and player['last_name'] == self.last_name:
-                players_table.update({'rank': rank})
+        player = self.get_document_from_instance()
+        players_table.update(
+            set('rank', rank),
+            doc_ids=[player.doc_id]
+        )
 
 
 class Tournament:
     def __init__(self, name, location=None, date=None, rounds=None, players=None, matches=None, description=None,
-                 time_control=None,
+                 time_control=None, history=None, round_info=None,
                  number_of_turns=4):
         self.name = name
         self.location = location
@@ -67,6 +69,8 @@ class Tournament:
         self.time_control = time_control
         self.description = description
         self.matches = []
+        self.history = []
+        self.round_info = []
 
     @property
     def len_players(self):
@@ -86,6 +90,8 @@ class Tournament:
             "time_control": self.time_control,
             "description": self.description,
             "matches": self.matches,
+            "history": self.history,
+            "round_info": self.round_info
         }
         tournaments_table = db.table('tournaments')
         tournaments_table.insert(serialized_tournament)
@@ -104,12 +110,30 @@ class Round:
         self.start_time = datetime.now().isoformat()
         self.round_number = len(db.table('tournaments').get(where('name') == tournament_choice)['rounds'])
         self.players = [i for i in db.table('players').all() if i.doc_id in self.tournament['players']]
-        self.round_done = False
 
     @property
     def end_date(self):
-        if self.round_done:
-            return datetime.now().isoformat()
+        return datetime.now().isoformat()
+
+    def save_in_db_start(self):
+        serialized_round = {
+            "start": self.start_time,
+            "roundNumber": self.round_number + 1
+        }
+        db.table('tournaments').update(
+            add('round_info', [serialized_round]),
+            where('name') == self.tournament_choice
+        )
+
+    def save_in_db_end(self):
+        serialized_round = {
+            "end": self.end_date,
+            "roundNumber": self.round_number + 1
+        }
+        db.table('tournaments').update(
+            add('round_info', [serialized_round]),
+            where('name') == self.tournament_choice
+        )
 
     def get_pairs_by_rank(self, players: list) -> list:
         pairs_list = []
@@ -187,10 +211,19 @@ class Round:
                 matches_not_played.append(pair)
         return matches_not_played
 
-    def get_name_from_ids(self, pair):
-        pair = flatten_list(pair)
-        return [{player.doc_id: f"{player['first_name']} {player['last_name']}"} for player in db.table('players') if
-                player.doc_id in pair]
+    def get_name_from_ids(self, pairs):
+        pairs_with_names = []
+        for pair in pairs:
+            pairs_with_names.append(
+                [{player.doc_id: f"{player['first_name']} {player['last_name']}"} for player in db.table('players') if
+                 player.doc_id in pair])
+        return pairs_with_names
+
+    def add_results_in_history(self, pair: list, result):
+        db.table('tournaments').update(
+            add('history', [(pair, {"winner": result})]),
+            where('name') == self.tournament_choice
+        )
 
 
 class Database:
@@ -261,4 +294,4 @@ class Database:
         tournaments = loads(dumps(tournaments_table.all()))
         for tournament in tournaments:
             if tournament['name'] == tournament_name:
-                print(tournament['matches'])
+                print(tournament['history'])

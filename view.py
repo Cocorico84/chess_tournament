@@ -18,7 +18,7 @@ class HomeMenuView:
 class TournamentView:
     def get_info(self):
         tournament_name = input("What name do you want to call it ? ")
-        tournament_location = input("Where is the location of your tournament ?")
+        tournament_location = input("Where is the location of your tournament ? ")
         tournament_round = int(input("How many rounds do you want ? "))
         print(f'Your tournament called "{tournament_name}" is created')
         return tournament_name, tournament_location, tournament_round
@@ -39,7 +39,7 @@ class PlayerView:
             if existing_player_choice == 'Y':
                 player_first_name = input("What is the first name of the player ? ")
                 player_last_name = input("What is the last name of the player ? ")
-                return player_first_name, player_last_name
+                return player_first_name, player_last_name, None, None
 
     def choose_tournament_to_add_player(self):
         tournament = input("Which tournament is the player in ? ")
@@ -76,9 +76,11 @@ class RoundView:
         choice = input("Which tournament do you want to launch round ? ")
         return choice
 
-    def round_over(self):
-        choice = input("The round is over ? Y/N ")
-        return True if choice == 'Y' else False
+    def display_if_round_over(self, number):
+        if number == 0:
+            print('The round is over, a new round is automatically launched')
+        else:
+            print("The round is not over")
 
 
 class ReportView:

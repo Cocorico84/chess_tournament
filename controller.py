@@ -87,13 +87,23 @@ class MatchResultController:
         if len(self.round.tournament['players']) < 8:
             return AddPlayerController()
 
-        round_is_over = self.round_view.round_over()
+        if len(self.round.tournament['rounds']) != 0:
+            pairs = flatten_list(list(self.round.tournament['rounds'][-1].values()))
+        else:
+            self.round.round_done = True
+            pairs = []
 
-        if round_is_over:
+        if pairs == []:
+            self.round.save_in_db_end()
+
+        left_matches = len(self.round.matches_not_played(pairs))
+        self.round_view.display_if_round_over(left_matches)
+        if left_matches > 0:
+            pairs = self.round.matches_not_played(pairs)
+        else:
             pairs = self.round.sorted_pairs(self.players)
             self.round.save_pairs_in_db(tournament_choice, pairs)
-        else:
-            pairs = flatten_list(list(self.round.tournament['rounds'][-1].values()))
+            self.round.save_in_db_start()
 
         pairs = self.round.matches_not_played(pairs)
         self.match_view.display_matches(self.round.get_name_from_ids(pairs))
@@ -107,8 +117,10 @@ class MatchResultController:
         if draw == 'N':
             winner = self.match_view.get_the_winner()
             self.round.winner_match(winner)
+            self.round.add_results_in_history(pair, winner)
         else:
             self.round.draw_match(pair)
+            self.round.add_results_in_history(pair, "D")
 
         return HomeMenuController()
 
