@@ -40,6 +40,9 @@ class CreateTournamentController:
             location=tournament_infos[1],
             number_of_turns=tournament_infos[2]
         ).save_in_db()
+
+        # TODO ajout des 8 joueurs de manière obligatoire
+
         return HomeMenuController()
 
 
@@ -141,6 +144,12 @@ class ReportController:
     def __init__(self):
         self.report_view = ReportView()
         self.db = Database()
+
+    # TODO enlever les print des report et mettre dans la view
+    # TODO mettre get_report dans le controleur
+    # TODO Docstring + typage (retour et params)
+    # TODO ajout d'une variable d'un tournoi actif
+
 
     def __call__(self):
         choice = self.report_view.report_choice()

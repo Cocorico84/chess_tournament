@@ -1,5 +1,4 @@
 from datetime import datetime
-from enum import Enum
 from json import dumps, loads
 from random import shuffle
 
@@ -9,12 +8,6 @@ from tinydb.operations import add, set
 from utils.utils import order_players_by_key
 
 db = TinyDB("db.json")
-
-
-class TimeControl(Enum):
-    Bullet = 1
-    Blitz = 2
-    Rapid = 3
 
 
 class Player:
@@ -218,7 +211,7 @@ class Round:
 
     def add_results_in_history(self, pair: list, result):
         db.table('tournaments').update(
-            add('history', [(pair, {"winner": result})]),
+            add('history', [(pair, result)]),
             where('name') == self.tournament_choice
         )
 
@@ -260,7 +253,7 @@ class Database:
         else:
             players = self.load_player_data()
 
-        for player in sorted(players, key=lambda x: x.first_name):
+        for player in sorted(players, key=lambda x: x.last_name):
             print({'first_name': player.first_name, 'last_name': player.last_name, 'rank': player.rank})
 
     def players_ranking_report(self, tournament=None):
