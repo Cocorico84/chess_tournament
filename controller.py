@@ -68,7 +68,7 @@ class AddPlayerController:
         for player in self.players:
             if player.first_name == player_first_name and player.last_name == player_last_name:
                 player = player.get_document_from_instance()
-                if tournament.len_players < 8:
+                if tournament.number_of_players < 8:
                     tournament.add_player_in_tournament(player, tournament_choice)
 
         return HomeMenuController()

@@ -6,7 +6,7 @@ from random import shuffle
 from tinydb import TinyDB, where
 from tinydb.operations import add, set
 
-from utils.utils import flatten_list, order_players_by_key
+from utils.utils import order_players_by_key
 
 db = TinyDB("db.json")
 
@@ -71,10 +71,7 @@ class Tournament:
         self.matches = []
         self.history = []
         self.round_info = []
-
-    @property
-    def len_players(self):
-        return len(self.players)
+        self.number_of_players = len(self.players)
 
     def __repr__(self):
         return self.name
@@ -232,20 +229,18 @@ class Database:
         self.players = db.table('players')
 
     def get_report(self, choice_number, tournament_name=None):
-        if choice_number == 1:
-            return self.players_alpha_report()
-        elif choice_number == 2:
-            return self.players_ranking_report()
-        elif choice_number == 3:
-            return self.players_alpha_report(tournament_name)
-        elif choice_number == 4:
-            return self.players_ranking_report(tournament_name)
-        elif choice_number == 5:
-            return self.get_all_tournaments()
-        elif choice_number == 6:
-            return self.get_rounds_of_tournament(tournament_name)
-        elif choice_number == 7:
-            return self.get_matches_of_tournament(tournament_name)
+        valid_commands = {1: "players_alpha_report",
+                          2: "players_ranking_report",
+                          3: "players_alpha_report",
+                          4: "players_ranking_report",
+                          5: "get_all_tournaments",
+                          6: "get_rounds_of_tournament",
+                          7: "get_matches_of_tournament"}
+
+        if tournament_name is None:
+            getattr(self, valid_commands[choice_number])()
+        else:
+            getattr(self, valid_commands[choice_number])(tournament_name)
 
     def load_player_data(self) -> list:
         player_table = db.table("players")
