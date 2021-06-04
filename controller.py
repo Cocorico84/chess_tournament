@@ -1,4 +1,4 @@
-from models import Tournament, Player, Round, Database
+from models import Tournament, Player, Database
 from utils.menu import Menu
 from utils.utils import flatten_list
 from view import HomeMenuView, TournamentView, PlayerView, MatchView, QuitView, ReportView, RoundView
@@ -18,7 +18,6 @@ class HomeMenuController:
 
     def __call__(self):
         self.menu.add("auto", "create a tournament", CreateTournamentController())
-        self.menu.add("auto", "add a player", AddPlayerController())
         self.menu.add("auto", "write a match result", MatchResultController())
         self.menu.add("auto", "change player rank", ChangeRankController())
         self.menu.add("auto", "get a report", ReportController())
@@ -30,29 +29,35 @@ class HomeMenuController:
 
 
 class CreateTournamentController:
+    """
+    This controller creates a tournament and allows to add 8 players. The tournament and the 8 players are savend in
+    the database in their own table.
+    """
+
     def __init__(self):
         self.tournament_view = TournamentView()
+        self.player_view = PlayerView()
+        self.db = Database()
+        self.players = self.db.load_player_data()
 
     def __call__(self):
         tournament_infos = self.tournament_view.get_info()
         Tournament(
             name=tournament_infos[0],
             location=tournament_infos[1],
-            number_of_turns=tournament_infos[2]
+            number_of_turns=tournament_infos[2],
+            description=tournament_infos[3],
+            time_control=tournament_infos[4]
         ).save_in_db()
 
-        # TODO ajout des 8 joueurs de manière obligatoire
+        self.add_a_player()
 
         return HomeMenuController()
 
-
-class AddPlayerController:
-    def __init__(self):
-        self.player_view = PlayerView()
-        self.db = Database()
-        self.players = self.db.load_player_data()
-
-    def __call__(self):
+    def add_a_player(self):
+        """
+        Create a player instance and save data in the table "players" from the database
+        """
         player_infos = self.player_view.add_player()
         player_first_name = player_infos[0]
         player_last_name = player_infos[1]
@@ -74,56 +79,49 @@ class AddPlayerController:
                 if tournament.number_of_players < 8:
                     tournament.add_player_in_tournament(player, tournament_choice)
 
-        return HomeMenuController()
-
 
 class MatchResultController:
     def __init__(self):
         self.round_view = RoundView()
         self.match_view = MatchView()
+        self.tournament = Database().tournament_in_progress()
 
     def __call__(self):
-        tournament_choice = self.round_view.get_tournament_choice()
-        self.round = Round(tournament_choice)
-        self.players = self.round.players
+        self.players = self.tournament.get_players_from_tournament()
 
-        if len(self.round.tournament['players']) < 8:
-            return AddPlayerController()
-
-        if len(self.round.tournament['rounds']) != 0:
-            pairs = flatten_list(list(self.round.tournament['rounds'][-1].values()))
+        if len(self.tournament.rounds) != 0:
+            pairs = flatten_list(list(self.tournament.rounds[-1].values()))
         else:
-            self.round.round_done = True
             pairs = []
 
-        if pairs == []:
-            self.round.save_in_db_end()
-
-        left_matches = len(self.round.matches_not_played(pairs))
+        left_matches = len(self.tournament.matches_not_played(pairs))
         self.round_view.display_if_round_over(left_matches)
         if left_matches > 0:
-            pairs = self.round.matches_not_played(pairs)
+            if left_matches == 1:
+                self.tournament.update_end_round()
+            pairs = self.tournament.matches_not_played(pairs)
         else:
-            pairs = self.round.sorted_pairs(self.players)
-            self.round.save_pairs_in_db(tournament_choice, pairs)
-            self.round.save_in_db_start()
+            pairs = self.tournament.sorted_pairs(self.players)
+            self.tournament.create_round()
 
-        pairs = self.round.matches_not_played(pairs)
-        self.match_view.display_matches(self.round.get_name_from_ids(pairs))
+            self.tournament.save_pairs_in_db(pairs)
+
+        pairs = self.tournament.matches_not_played(pairs)
+        self.match_view.display_matches(self.tournament.get_name_from_ids(pairs))
 
         pair_played_choice = self.match_view.get_match_played()
         pair = pairs[pair_played_choice]
-        self.round.add_matches_in_tournament(pair, tournament_choice)
+        self.tournament.add_matches_in_tournament(pair)
 
         draw = self.match_view.ask_if_draw()
 
         if draw == 'N':
             winner = self.match_view.get_the_winner()
-            self.round.winner_match(winner)
-            self.round.add_results_in_history(pair, winner)
+            self.tournament.winner_match(winner)
+            self.tournament.create_match(pair, winner)
         else:
-            self.round.draw_match(pair)
-            self.round.add_results_in_history(pair, "D")
+            self.tournament.draw_match(pair)
+            self.tournament.create_match(pair, "D")
 
         return HomeMenuController()
 
@@ -145,20 +143,38 @@ class ReportController:
         self.report_view = ReportView()
         self.db = Database()
 
-    # TODO enlever les print des report et mettre dans la view
-    # TODO mettre get_report dans le controleur
-    # TODO Docstring + typage (retour et params)
-    # TODO ajout d'une variable d'un tournoi actif
-
-
     def __call__(self):
         choice = self.report_view.report_choice()
         if choice in [1, 2, 5]:
-            self.db.get_report(choice)
+            report = self.get_report(choice)
         else:
+            self.report_view.display_tournament_names(self.db.load_tournament_data())
             tournament_choice = self.report_view.get_tournament_choice()
-            self.db.get_report(choice, tournament_choice)
+            report = self.get_report(choice, tournament_choice)
+        if choice in [1, 2, 3, 4]:
+            self.report_view.display_players_report(report)
+        elif choice == 5:
+            self.report_view.display_tournament(report)
+        elif choice == 6:
+            self.report_view.display_rounds(report)
+        elif choice == 7:
+            self.report_view.display_matches(report)
         return HomeMenuController()
+
+    def get_report(self, choice_number, tournament_name=None):
+        valid_commands = {
+            1: "players_alpha_report",
+            2: "players_ranking_report",
+            3: "players_alpha_report",
+            4: "players_ranking_report",
+            5: "get_all_tournaments",
+            6: "get_rounds_of_tournament",
+            7: "get_matches_of_tournament"
+        }
+        if tournament_name is None:
+            return getattr(self.db, valid_commands[choice_number])()
+        else:
+            return getattr(self.db, valid_commands[choice_number])(tournament_name)
 
 
 class QuitController:
