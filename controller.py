@@ -12,13 +12,16 @@ class ApplicationController:
 
 
 class HomeMenuController:
-    def __init__(self):
+    def __init__(self, *args):
         self.menu = Menu()
         self.view = HomeMenuView(self.menu)
+        self.args = args
 
     def __call__(self):
         self.menu.add("auto", "create a tournament", CreateTournamentController())
-        self.menu.add("auto", "write a match result", MatchResultController())
+        self.menu.add("auto", "resume a tournament", ResumeTournamentController())
+        self.menu.add("auto", "write a match result",
+                      MatchResultController(choice=self.args[0] if self.args else None))
         self.menu.add("auto", "change player rank", ChangeRankController())
         self.menu.add("auto", "get a report", ReportController())
         self.menu.add("q", "quit", QuitController())
@@ -80,13 +83,28 @@ class CreateTournamentController:
                     tournament.add_player_in_tournament(player, tournament_choice)
 
 
-class MatchResultController:
+class ResumeTournamentController:
     def __init__(self):
-        self.round_view = RoundView()
-        self.match_view = MatchView()
-        self.tournament = Database().tournament_in_progress()
+        self.active_tournaments = Database().all_tournaments_in_progress()
+        self.tournament_view = TournamentView()
 
     def __call__(self):
+        choice = self.tournament_view.tournament_in_progress_selected(self.active_tournaments)
+        for tournament in self.active_tournaments:
+            if choice == tournament.name:
+                tournament_choice = tournament
+                return HomeMenuController(tournament_choice)
+        return HomeMenuController()
+
+
+class MatchResultController:
+    def __init__(self, choice=None):
+        self.round_view = RoundView()
+        self.match_view = MatchView()
+        self.tournament = Database().all_tournaments_in_progress()[-1] if choice is None else choice
+
+    def __call__(self):
+        self.match_view.display_active_tournament(self.tournament)
         self.players = self.tournament.get_players_from_tournament()
 
         if len(self.tournament.rounds) != 0:

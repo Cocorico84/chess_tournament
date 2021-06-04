@@ -25,6 +25,11 @@ class TournamentView:
         print(f'Your tournament called "{tournament_name}" is created')
         return tournament_name, tournament_location, tournament_round, tournament_description, tournament_time_control
 
+    def tournament_in_progress_selected(self, tournaments: list):
+        print("Tournament choices : ", [tournament.name for tournament in tournaments])
+        choice = input("Which active tournaments do you want ? ")
+        return choice
+
 
 class PlayerView:
     def check_if_player_in_db(self):
@@ -60,6 +65,9 @@ class PlayerView:
 
 
 class MatchView:
+    def display_active_tournament(self, tournament):
+        print(f"The tournament selected is {tournament}")
+
     def display_matches(self, pairs):
         print({i: pair for i, pair in enumerate(pairs, 0)})
 

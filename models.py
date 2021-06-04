@@ -277,8 +277,8 @@ class Database:
         self.tournaments = db.table('tournaments')
         self.players = db.table('players')
 
-    def tournament_in_progress(self):
-        return [Tournament(**tournament) for tournament in self.tournaments.all() if tournament['is_active']][-1]
+    def all_tournaments_in_progress(self):
+        return [Tournament(**tournament) for tournament in self.tournaments.all() if tournament['is_active']]
 
     def load_player_data(self) -> list:
         """
