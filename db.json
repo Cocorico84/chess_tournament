@@ -1,1 +1,190 @@
-{"players": {"1": {"first_name": "b", "last_name": "he", "birth": null, "gender": null, "rank": 40, "point": 26.5}, "2": {"first_name": "a", "last_name": "aa", "birth": null, "gender": null, "rank": 3, "point": 22.5}, "3": {"first_name": "c", "last_name": "ll", "birth": null, "gender": null, "rank": 11, "point": 20.5}, "4": {"first_name": "d", "last_name": "pp", "birth": null, "gender": null, "rank": 12, "point": 25.5}, "5": {"first_name": "e", "last_name": "nm", "birth": null, "gender": null, "rank": 12, "point": 23.0}, "6": {"first_name": "p", "last_name": "ml", "birth": null, "gender": null, "rank": 12, "point": 22.0}, "7": {"first_name": "n", "last_name": "qw", "birth": null, "gender": null, "rank": 10, "point": 19.5}, "8": {"first_name": "j", "last_name": "n", "birth": null, "gender": null, "rank": 1, "point": 16.0}}, "tournaments": {"1": {"name": "popo", "location": "paris", "date": "2021-05-31T08:02:31.865363", "number_of_turns": 4, "rounds": [{"1": [[3, 1], [6, 7], [2, 4], [8, 5]]}], "players": [1, 2, 3, 4, 5, 6, 7, 8], "time_control": null, "description": null, "matches": [[3, 1], [6, 7]], "history": [{"pair": [3, 1], "winner": "D"}, {"pair": [6, 7], "winner": "D"}], "round_info": [{"start_time": "2021-06-04T11:51:33.483979", "round_number": 1, "end_date": 0}], "is_active": true}, "2": {"name": "cool", "location": "nice", "date": "", "number_of_turns": 4, "rounds": [{"1": [[7, 8], [2, 6], [5, 4], [1, 3]]}], "players": [1, 2, 3, 4, 5, 6, 7, 8], "time_control": "Blitz", "description": "it is awesome", "matches": [], "history": [], "round_info": [{"start_time": "2021-06-04T12:55:13.915906", "round_number": 1, "end_date": 0}], "is_active": true}}}
+{
+  "players": {
+    "1": {
+      "first_name": "b",
+      "last_name": "he",
+      "birth": null,
+      "gender": null,
+      "rank": 40,
+      "point": 32.0
+    },
+    "2": {
+      "first_name": "a",
+      "last_name": "aa",
+      "birth": null,
+      "gender": null,
+      "rank": 3,
+      "point": 28.5
+    },
+    "3": {
+      "first_name": "c",
+      "last_name": "ll",
+      "birth": null,
+      "gender": null,
+      "rank": 11,
+      "point": 26.5
+    },
+    "4": {
+      "first_name": "d",
+      "last_name": "pp",
+      "birth": null,
+      "gender": null,
+      "rank": 12,
+      "point": 31.0
+    },
+    "5": {
+      "first_name": "e",
+      "last_name": "nm",
+      "birth": null,
+      "gender": null,
+      "rank": 12,
+      "point": 28.0
+    },
+    "6": {
+      "first_name": "p",
+      "last_name": "ml",
+      "birth": null,
+      "gender": null,
+      "rank": 12,
+      "point": 27.5
+    },
+    "7": {
+      "first_name": "n",
+      "last_name": "qw",
+      "birth": null,
+      "gender": null,
+      "rank": 10,
+      "point": 25.0
+    },
+    "8": {
+      "first_name": "j",
+      "last_name": "n",
+      "birth": null,
+      "gender": null,
+      "rank": 1,
+      "point": 23.0
+    }
+  },
+  "tournaments": {
+    "1": {
+      "name": "popo",
+      "location": "paris",
+      "date": "2021-06-05T22:36:50.213956",
+      "number_of_turns": 4,
+      "rounds": [
+        {
+          "1": [
+            [
+              3,
+              6
+            ],
+            [
+              1,
+              7
+            ],
+            [
+              2,
+              4
+            ],
+            [
+              5,
+              8
+            ]
+          ]
+        }
+      ],
+      "players": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "time_control": null,
+      "description": null,
+      "matches": [
+        [
+          3,
+          6
+        ],
+        [
+          1,
+          7
+        ],
+        [
+          2,
+          4
+        ],
+        [
+          5,
+          8
+        ]
+      ],
+      "history": [
+        {
+          "pair": [
+            [
+              {
+                "3": "c ll"
+              },
+              {
+                "6": "p ml"
+              }
+            ]
+          ],
+          "winner": 3
+        },
+        {
+          "pair": [
+            [
+              {
+                "1": "b he"
+              },
+              {
+                "7": "n qw"
+              }
+            ]
+          ],
+          "winner": "D"
+        },
+        {
+          "pair": [
+            [
+              {
+                "2": "a aa"
+              },
+              {
+                "4": "d pp"
+              }
+            ]
+          ],
+          "winner": "D"
+        },
+        {
+          "pair": [
+            [
+              {
+                "5": "e nm"
+              },
+              {
+                "8": "j n"
+              }
+            ]
+          ],
+          "winner": "D"
+        }
+      ],
+      "round_info": [
+        {
+          "start_time": "2021-06-06T11:46:11.869688",
+          "round_number": 1,
+          "end_date": "2021-06-07T12:36:23.827203"
+        }
+      ],
+      "is_active": true
+    }
+  }
+}

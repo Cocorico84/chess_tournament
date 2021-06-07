@@ -1,4 +1,8 @@
 class HomeMenuView:
+    """
+    Display the menu with choices the user can have
+    """
+
     def __init__(self, menu):
         self.menu = menu
 
@@ -16,6 +20,10 @@ class HomeMenuView:
 
 
 class TournamentView:
+    """
+    This class contains function to get the tournament informations and choose which tournament is active
+    """
+
     def get_info(self):
         tournament_name = input("What name do you want to call it ? ")
         tournament_location = input("Where is the location of your tournament ? ")
@@ -30,10 +38,14 @@ class TournamentView:
         choice = input("Which active tournaments do you want ? ")
         return choice
 
+    def display_error_tournament_active(self):
+        print("You have already a tournament in progress")
+
 
 class PlayerView:
-    def check_if_player_in_db(self):
-        pass
+    """
+    Retrieve player informations, which tournament add the player, and input to change the rank of the player
+    """
 
     def add_player(self):
         choice = input("Add a player in the database ? Y/N ")
@@ -65,6 +77,10 @@ class PlayerView:
 
 
 class MatchView:
+    """
+    This view displays matches and retrieve the result of the match
+    """
+
     def display_active_tournament(self, tournament):
         print(f"The tournament selected is {tournament}")
 
@@ -85,11 +101,18 @@ class MatchView:
 
 
 class RoundView:
+    """
+    A view to print a sentence to show if the round is over or not.
+    """
+
     def display_if_round_over(self, number):
         if number == 0:
             print('The round is over, a new round is automatically launched')
         else:
             print("The round is not over")
+
+    def error_no_active_tournament(self):
+        print("There is no active tournament, please create one before launching rounds")
 
 
 class ReportView:
@@ -119,31 +142,14 @@ class ReportView:
 
     def display_players_report(self, players: list):
         for player in players:
-            print({
-                'first name': player.first_name,
-                'last name': player.last_name,
-                'birth': player.birth,
-                'gender': player.gender,
-                'rank': player.rank,
-                'point': player.point
-            })
+            print(f"The first name of the player is {player.first_name}, the last name is {player.last_name}, the "
+                  f"date of birth is {player.birth}, the gender is {player.gender}, the rank is {player.rank} an"
+                  f"d has {player.point} points")
 
     def display_tournament(self, tournaments: list):
         for tournament in tournaments:
-            print({
-                "name": tournament.name,
-                "location": tournament.location,
-                "date": tournament.date,
-                "number_of_turns": tournament.number_of_turns,
-                "rounds": tournament.rounds,
-                "players": tournament.players,
-                "time_control": tournament.time_control,
-                "description": tournament.description,
-                "matches": tournament.matches,
-                "history": tournament.history,
-                "round_info": tournament.round_info,
-                "is_active": tournament.is_active,
-            })
+            print(f"The name of the tournament is {tournament.name}, based in {tournament.location}, has started at "
+                  f"{tournament.date}, has {tournament.number_of_turns} rounds")
 
     def display_rounds(self, rounds):
         for round in rounds:

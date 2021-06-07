@@ -1,3 +1,5 @@
+from typing import Optional
+
 from models import Tournament, Player, Database
 from utils.menu import Menu
 from utils.utils import flatten_list
@@ -12,16 +14,13 @@ class ApplicationController:
 
 
 class HomeMenuController:
-    def __init__(self, *args):
+    def __init__(self):
         self.menu = Menu()
         self.view = HomeMenuView(self.menu)
-        self.args = args
 
     def __call__(self):
         self.menu.add("auto", "create a tournament", CreateTournamentController())
-        self.menu.add("auto", "resume a tournament", ResumeTournamentController())
-        self.menu.add("auto", "write a match result",
-                      MatchResultController(choice=self.args[0] if self.args else None))
+        self.menu.add("auto", "write a match result", MatchResultController())
         self.menu.add("auto", "change player rank", ChangeRankController())
         self.menu.add("auto", "get a report", ReportController())
         self.menu.add("q", "quit", QuitController())
@@ -44,20 +43,24 @@ class CreateTournamentController:
         self.players = self.db.load_player_data()
 
     def __call__(self):
-        tournament_infos = self.tournament_view.get_info()
-        Tournament(
-            name=tournament_infos[0],
-            location=tournament_infos[1],
-            number_of_turns=tournament_infos[2],
-            description=tournament_infos[3],
-            time_control=tournament_infos[4]
-        ).save_in_db()
+        if len(self.db.all_tournaments_in_progress()) > 0:
+            self.tournament_view.display_error_tournament_active()
+        else:
+            tournament_infos = self.tournament_view.get_info()
+            tournament = Tournament(
+                name=tournament_infos[0],
+                location=tournament_infos[1],
+                number_of_turns=tournament_infos[2],
+                description=tournament_infos[3],
+                time_control=tournament_infos[4]
+            )
+            tournament.save_in_db()
 
-        self.add_a_player()
+            self.add_a_player(tournament=tournament)
 
         return HomeMenuController()
 
-    def add_a_player(self):
+    def add_a_player(self, tournament: Tournament):
         """
         Create a player instance and save data in the table "players" from the database
         """
@@ -74,36 +77,28 @@ class CreateTournamentController:
                    gender=player_gender
                    ).save_in_db()
 
-        tournament_choice = self.player_view.choose_tournament_to_add_player()
-        tournament = Tournament(name=tournament_choice)
         for player in self.players:
             if player.first_name == player_first_name and player.last_name == player_last_name:
                 player = player.get_document_from_instance()
                 if tournament.number_of_players < 8:
-                    tournament.add_player_in_tournament(player, tournament_choice)
-
-
-class ResumeTournamentController:
-    def __init__(self):
-        self.active_tournaments = Database().all_tournaments_in_progress()
-        self.tournament_view = TournamentView()
-
-    def __call__(self):
-        choice = self.tournament_view.tournament_in_progress_selected(self.active_tournaments)
-        for tournament in self.active_tournaments:
-            if choice == tournament.name:
-                tournament_choice = tournament
-                return HomeMenuController(tournament_choice)
-        return HomeMenuController()
+                    tournament.add_player_in_tournament(player)
 
 
 class MatchResultController:
-    def __init__(self, choice=None):
+    """
+    This controller allows to write results and save in the database.
+    """
+    def __init__(self):
         self.round_view = RoundView()
         self.match_view = MatchView()
-        self.tournament = Database().all_tournaments_in_progress()[-1] if choice is None else choice
 
     def __call__(self):
+        if len(Database().all_tournaments_in_progress()) == 0:
+            self.round_view.error_no_active_tournament()
+            return HomeMenuController()
+        else:
+            self.tournament = Database().all_tournaments_in_progress()[0]
+
         self.match_view.display_active_tournament(self.tournament)
         self.players = self.tournament.get_players_from_tournament()
 
@@ -117,6 +112,9 @@ class MatchResultController:
         if left_matches > 0:
             if left_matches == 1:
                 self.tournament.update_end_round()
+                if self.tournament.left_round == 0:
+                    self.tournament.is_active = False
+                    self.tournament.save_in_db()
             pairs = self.tournament.matches_not_played(pairs)
         else:
             pairs = self.tournament.sorted_pairs(self.players)
@@ -145,6 +143,9 @@ class MatchResultController:
 
 
 class ChangeRankController:
+    """
+    This controller changes the rank of the player form his first name and his last name
+    """
     def __init__(self):
         self.player = PlayerView()
         self.db = Database()
@@ -157,6 +158,9 @@ class ChangeRankController:
 
 
 class ReportController:
+    """
+    Check the right choice to get the report
+    """
     def __init__(self):
         self.report_view = ReportView()
         self.db = Database()
@@ -179,7 +183,7 @@ class ReportController:
             self.report_view.display_matches(report)
         return HomeMenuController()
 
-    def get_report(self, choice_number, tournament_name=None):
+    def get_report(self, choice_number: int, tournament_name: Optional[str] = None):
         valid_commands = {
             1: "players_alpha_report",
             2: "players_ranking_report",

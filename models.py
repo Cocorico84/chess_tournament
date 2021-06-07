@@ -57,7 +57,7 @@ class Player:
 
 class Tournament:
     def __init__(self, name, location=None, date=None, rounds=None, players=None, matches=None, description=None,
-                 time_control=None, history=None, round_info=None, is_active=False,
+                 time_control=None, history=None, round_info=None, is_active=True,
                  number_of_turns=4):
         self.name = name
         self.location = location
@@ -80,7 +80,6 @@ class Tournament:
         """
         This function serialize our data et save it in the database
         """
-        self.is_active = True
         serialized_tournament = {
             "name": self.name,
             "location": self.location,
@@ -96,12 +95,20 @@ class Tournament:
             "is_active": self.is_active,
         }
         tournaments_table = db.table('tournaments')
+        tournaments_table.truncate()
         tournaments_table.insert(serialized_tournament)
 
-    def add_player_in_tournament(self, player, tournament_name):
+    @property
+    def left_round(self) -> int:
+        """
+        :return: number of left rounds
+        """
+        return self.number_of_turns - len(self.rounds)
+
+    def add_player_in_tournament(self, player, ):
         db.table('tournaments').update(
             add("players", [player.doc_id]),
-            where('name') == tournament_name
+            where('name') == self.name
         )
 
     def get_players_from_tournament(self) -> list:
@@ -121,17 +128,19 @@ class Tournament:
         """
         Add the end date of the round and update it in the database
         """
-        round = db.table("tournaments").get(where('name') == self.name)['round_info'][-1]
+        round = self.round_info[-1]
         instance_round = Round(**round)
         instance_round.end_date = datetime.now().isoformat()
         serialize_round = instance_round.serialize()
+        self.round_info.pop()
+        self.round_info.append(serialize_round)
         db.table('tournaments').update(
-            add('round_info', [serialize_round]),
+            set('round_info', self.round_info),
             where('name') == self.name
         )
 
     def create_match(self, pair, winner):
-        self.history.append(Match(pair=pair, winner=winner).serialize())
+        self.history.append(Match(pair=self.get_name_from_ids([pair]), winner=winner).serialize())
         db.table('tournaments').update(
             add('history', [self.history[-1]]),
             where('name') == self.name
@@ -142,7 +151,6 @@ class Tournament:
     def get_pairs_by_rank(self, players: list) -> list:
         """
         Split the list of the 8 players in half and make pairs with one of each list
-        :param players:
         """
         pairs_list = []
         list_one = players[:4]
@@ -333,18 +341,22 @@ class Database:
         """
         return [tournament for tournament in self.load_tournament_data()]
 
-    def get_rounds_of_tournament(self, tournament_name: str = None) -> list:
+    def get_rounds_of_tournament(self, tournament_name: str) -> list:
         """
         :return: list of all rounds (played and in progress) of a specific tournament
 
         """
+        rounds = []
         tournaments_table = db.table('tournaments')
         tournaments = loads(dumps(tournaments_table.all()))
         for tournament in tournaments:
             if tournament['name'] == tournament_name:
-                return tournament['rounds']
+                for round in tournament['rounds']:
+                    rounds.extend([{key: Tournament(name=tournament_name).get_name_from_ids(value)} for key, value in
+                                   round.items()])
+        return rounds
 
-    def get_matches_of_tournament(self, tournament_name: str = None) -> list:
+    def get_matches_of_tournament(self, tournament_name: str) -> list:
         """
         :return: list of all played matches of a specific tournament
         """
