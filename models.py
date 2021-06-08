@@ -95,7 +95,6 @@ class Tournament:
             "is_active": self.is_active,
         }
         tournaments_table = db.table('tournaments')
-        tournaments_table.truncate()
         tournaments_table.insert(serialized_tournament)
 
     @property
@@ -105,7 +104,7 @@ class Tournament:
         """
         return self.number_of_turns - len(self.rounds)
 
-    def add_player_in_tournament(self, player, ):
+    def add_player_in_tournament(self, player):
         db.table('tournaments').update(
             add("players", [player.doc_id]),
             where('name') == self.name
