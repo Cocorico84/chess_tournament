@@ -29,7 +29,7 @@ class TournamentView:
         tournament_location = input("Where is the location of your tournament ? ")
         tournament_round = int(input("How many rounds do you want ? "))
         tournament_description = input("Describe your tournament ")
-        tournament_time_control = input("What is your time control? ")
+        tournament_time_control = input("What is your time control? Bullet-Blitz-Rapid time ")
         print(f'Your tournament called "{tournament_name}" is created')
         return tournament_name, tournament_location, tournament_round, tournament_description, tournament_time_control
 
@@ -41,34 +41,33 @@ class TournamentView:
     def display_error_tournament_active(self):
         print("You have already a tournament in progress")
 
+    def incremented_player_number(self, number):
+        print(f"The player number {number} is created")
+
 
 class PlayerView:
     """
     Retrieve player informations, which tournament add the player, and input to change the rank of the player
     """
+    def check_if_player_exists(self):
+        player_first_name = input("What is the first name of the player ? ")
+        player_last_name = input("What is the last name of the player ? ")
+        return player_first_name, player_last_name
 
-    def add_player(self):
-        choice = input("Add a player in the database ? Y/N ")
-        if choice == 'Y':
-            player_first_name = input("What is the first name of the player ? ")
-            player_last_name = input("What is the last name of the player ? ")
-            player_birth = input("What is the birth ? DD-MM-YYYY ")
-            player_gender = input("What is the gender of the player ? ")
-            print(f'The player "{player_first_name} {player_last_name}" is created')
-            return player_first_name, player_last_name, player_birth, player_gender
-        else:
-            existing_player_choice = input("Do you want to add an existing player in a tournament ? Y/N ")
-            if existing_player_choice == 'Y':
-                player_first_name = input("What is the first name of the player ? ")
-                player_last_name = input("What is the last name of the player ? ")
-                return player_first_name, player_last_name, None, None
-
-    def choose_tournament_to_add_player(self):
-        tournament = input("Which tournament is the player in ? ")
-        print(f'The player has been added in "{tournament}" tournament')
-        return tournament
+    def ask_more_infos(self):
+        """
+        If the player doesn't exist exist, it requires the birth and the gender to complete profile
+        :return: the birth and the gender of the player
+        """
+        player_birth = input("What is the birth of the player ? DD-MM-YYYY ")
+        player_gender = input("What is the gender of the player ? ")
+        return player_birth, player_gender
 
     def get_first_name_last_name(self):
+        """
+        Look for the player to change his rank
+        :return: first name, last name and new rank
+        """
         player_first_name = input("What is the first name of the player ? ")
         player_last_name = input("What is the last name of the player ? ")
         player_rank = int(input("What is his current rank ? "))

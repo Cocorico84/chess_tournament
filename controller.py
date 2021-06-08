@@ -7,6 +7,9 @@ from view import HomeMenuView, TournamentView, PlayerView, MatchView, QuitView, 
 
 
 class ApplicationController:
+    """
+    Launch tha application and the loop
+    """
     def start(self):
         self.controller = HomeMenuController()
         while self.controller:
@@ -14,6 +17,9 @@ class ApplicationController:
 
 
 class HomeMenuController:
+    """
+    Controller which displays the menu with different choices
+    """
     def __init__(self):
         self.menu = Menu()
         self.view = HomeMenuView(self.menu)
@@ -56,7 +62,11 @@ class CreateTournamentController:
             )
             tournament.save_in_db()
 
-            self.add_a_player(tournament=tournament)
+            n = 1
+            while n < 9:
+                self.add_a_player(tournament=tournament)
+                self.tournament_view.incremented_player_number(n)
+                n += 1
 
         return HomeMenuController()
 
@@ -64,24 +74,22 @@ class CreateTournamentController:
         """
         Create a player instance and save data in the table "players" from the database
         """
-        player_infos = self.player_view.add_player()
+        player_infos = self.player_view.check_if_player_exists()
         player_first_name = player_infos[0]
         player_last_name = player_infos[1]
-        player_birth = player_infos[2]
-        player_gender = player_infos[3]
 
         if (player_first_name, player_last_name) not in [(i.first_name, i.last_name) for i in self.players]:
+            more_infos = self.player_view.ask_more_infos()
             Player(first_name=player_first_name,
                    last_name=player_last_name,
-                   birth=player_birth,
-                   gender=player_gender
+                   birth=more_infos[0],
+                   gender=more_infos[1]
                    ).save_in_db()
 
-        for player in self.players:
+        for player in self.db.load_player_data():
             if player.first_name == player_first_name and player.last_name == player_last_name:
                 player = player.get_document_from_instance()
-                if tournament.number_of_players < 8:
-                    tournament.add_player_in_tournament(player)
+                tournament.add_player_in_tournament(player)
 
 
 class MatchResultController:

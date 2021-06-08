@@ -56,12 +56,12 @@ class Player:
 
 
 class Tournament:
-    def __init__(self, name, location=None, date=None, rounds=None, players=None, matches=None, description=None,
-                 time_control=None, history=None, round_info=None, is_active=True,
+    def __init__(self, name, location=None, date=datetime.now().isoformat(), rounds=None, players=None, matches=None,
+                 description=None, time_control=None, history=None, round_info=None, is_active=True,
                  number_of_turns=4):
         self.name = name
         self.location = location
-        self.date = datetime.now().isoformat() if date is not None else ""
+        self.date = date
         self.number_of_turns = number_of_turns
         self.rounds = rounds if rounds is not None else []
         self.players = players if players is not None else []
@@ -95,7 +95,6 @@ class Tournament:
             "is_active": self.is_active,
         }
         tournaments_table = db.table('tournaments')
-        tournaments_table.truncate()
         tournaments_table.insert(serialized_tournament)
 
     @property
@@ -105,7 +104,7 @@ class Tournament:
         """
         return self.number_of_turns - len(self.rounds)
 
-    def add_player_in_tournament(self, player, ):
+    def add_player_in_tournament(self, player):
         db.table('tournaments').update(
             add("players", [player.doc_id]),
             where('name') == self.name
