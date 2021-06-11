@@ -27,7 +27,7 @@ class TournamentView:
     def get_info(self):
         tournament_name = input("What name do you want to call it ? ")
         tournament_location = input("Where is the location of your tournament ? ")
-        tournament_round = int(input("How many rounds do you want ? "))
+        tournament_round = input("How many rounds do you want ? ")
         tournament_description = input("Describe your tournament ")
         tournament_time_control = input("What is your time control? Bullet-Blitz-Rapid time ")
         print(f'Your tournament called "{tournament_name}" is created')
@@ -70,7 +70,7 @@ class PlayerView:
         """
         player_first_name = input("What is the first name of the player ? ")
         player_last_name = input("What is the last name of the player ? ")
-        player_rank = int(input("What is his current rank ? "))
+        player_rank = input("What is his current rank ? ")
         print(f"The rank of player {player_first_name} {player_last_name} is {player_rank}")
         return player_first_name, player_last_name, player_rank
 
@@ -87,7 +87,7 @@ class MatchView:
         print({i: pair for i, pair in enumerate(pairs, 0)})
 
     def get_match_played(self):
-        choice = int(input("Which match has been played ? "))
+        choice = input("Which match has been played ? ")
         return choice
 
     def ask_if_draw(self):
@@ -95,7 +95,7 @@ class MatchView:
         return draw
 
     def get_the_winner(self):
-        winner = int(input("Who's the winner ? "))
+        winner = input("Who's the winner ? ")
         return winner
 
 
@@ -132,7 +132,7 @@ class ReportView:
 
     def report_choice(self):
         self._display_choices()
-        choice = int(input("What is your choice ? "))
+        choice = input("What is your choice ? ")
         return choice
 
     def get_tournament_choice(self):

@@ -1,77 +1,51 @@
 {
-  "players": {
-    "1": {
-      "first_name": "b",
-      "last_name": "he",
-      "birth": null,
-      "gender": null,
-      "rank": 20,
-      "point": 32.5
-    },
-    "2": {
-      "first_name": "a",
-      "last_name": "aa",
-      "birth": null,
-      "gender": null,
-      "rank": 3,
-      "point": 29.0
-    },
-    "3": {
-      "first_name": "c",
-      "last_name": "ll",
-      "birth": null,
-      "gender": null,
-      "rank": 11,
-      "point": 27.0
-    },
-    "4": {
-      "first_name": "d",
-      "last_name": "pp",
-      "birth": null,
-      "gender": null,
-      "rank": 12,
-      "point": 31.5
-    },
-    "5": {
-      "first_name": "e",
-      "last_name": "nm",
-      "birth": null,
-      "gender": null,
-      "rank": 12,
-      "point": 28.5
-    },
-    "6": {
-      "first_name": "p",
-      "last_name": "ml",
-      "birth": null,
-      "gender": null,
-      "rank": 12,
-      "point": 28.0
-    },
-    "7": {
-      "first_name": "n",
-      "last_name": "qw",
-      "birth": null,
-      "gender": null,
-      "rank": 10,
-      "point": 25.5
-    },
-    "8": {
-      "first_name": "j",
-      "last_name": "n",
-      "birth": null,
-      "gender": null,
-      "rank": 1,
-      "point": 23.5
-    }
-  },
   "tournaments": {
     "1": {
-      "name": "popo",
+      "name": "cool",
       "location": "paris",
-      "date": "2021-06-05T22:36:50.213956",
+      "date": "2021-06-11T08:26:29.826789",
       "number_of_turns": 4,
       "rounds": [
+        {
+          "1": [
+            [
+              1,
+              6
+            ],
+            [
+              3,
+              8
+            ],
+            [
+              5,
+              7
+            ],
+            [
+              4,
+              2
+            ]
+          ]
+        },
+        {
+          "2": [
+            [
+              1,
+              5
+            ],
+            [
+              2,
+              6
+            ],
+            [
+              3,
+              7
+            ],
+            [
+              4,
+              8
+            ]
+          ]
+        }
       ],
       "players": [
         1,
@@ -83,15 +57,176 @@
         7,
         8
       ],
-      "time_control": null,
-      "description": null,
+      "time_control": "bullet",
+      "description": "a handsome tournament",
       "matches": [
+        [
+          1,
+          6
+        ],
+        [
+          3,
+          8
+        ],
+        [
+          5,
+          7
+        ],
+        [
+          4,
+          2
+        ],
+        [
+          1,
+          5
+        ]
       ],
       "history": [
+        {
+          "pair": [
+            [
+              {
+                "1": "a a"
+              },
+              {
+                "6": "f f"
+              }
+            ]
+          ],
+          "winner": "D"
+        },
+        {
+          "pair": [
+            [
+              {
+                "3": "c c"
+              },
+              {
+                "8": "h h"
+              }
+            ]
+          ],
+          "winner": 3
+        },
+        {
+          "pair": [
+            [
+              {
+                "5": "e "
+              },
+              {
+                "7": "g g"
+              }
+            ]
+          ],
+          "winner": 5
+        },
+        {
+          "pair": [
+            [
+              {
+                "2": "b b"
+              },
+              {
+                "4": "d d"
+              }
+            ]
+          ],
+          "winner": "D"
+        },
+        {
+          "pair": [
+            [
+              {
+                "1": "a a"
+              },
+              {
+                "5": "e "
+              }
+            ]
+          ],
+          "winner": 1
+        }
       ],
       "round_info": [
+        {
+          "start_time": "2021-06-11T08:31:06.330034",
+          "round_number": 1,
+          "end_date": "2021-06-11T08:34:09.543199"
+        },
+        {
+          "start_time": "2021-06-11T09:38:43.000716",
+          "round_number": 2,
+          "end_date": 0
+        }
       ],
-      "is_active": false
+      "is_active": true
+    }
+  },
+  "players": {
+    "1": {
+      "first_name": "a",
+      "last_name": "a",
+      "birth": "",
+      "gender": "",
+      "rank": 10,
+      "point": 1.5
+    },
+    "2": {
+      "first_name": "b",
+      "last_name": "b",
+      "birth": "",
+      "gender": "",
+      "rank": 0,
+      "point": 0.5
+    },
+    "3": {
+      "first_name": "c",
+      "last_name": "c",
+      "birth": "",
+      "gender": "",
+      "rank": 0,
+      "point": 1
+    },
+    "4": {
+      "first_name": "d",
+      "last_name": "d",
+      "birth": "",
+      "gender": "",
+      "rank": 0,
+      "point": 0.5
+    },
+    "5": {
+      "first_name": "e",
+      "last_name": "",
+      "birth": "",
+      "gender": "",
+      "rank": 0,
+      "point": 1
+    },
+    "6": {
+      "first_name": "f",
+      "last_name": "f",
+      "birth": "",
+      "gender": "",
+      "rank": 0,
+      "point": 0.5
+    },
+    "7": {
+      "first_name": "g",
+      "last_name": "g",
+      "birth": "",
+      "gender": "",
+      "rank": 0,
+      "point": 0
+    },
+    "8": {
+      "first_name": "h",
+      "last_name": "h",
+      "birth": "",
+      "gender": "",
+      "rank": 0,
+      "point": 0
     }
   }
 }

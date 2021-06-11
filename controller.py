@@ -10,6 +10,7 @@ class ApplicationController:
     """
     Launch tha application and the loop
     """
+
     def start(self):
         self.controller = HomeMenuController()
         while self.controller:
@@ -20,6 +21,7 @@ class HomeMenuController:
     """
     Controller which displays the menu with different choices
     """
+
     def __init__(self):
         self.menu = Menu()
         self.view = HomeMenuView(self.menu)
@@ -56,7 +58,7 @@ class CreateTournamentController:
             tournament = Tournament(
                 name=tournament_infos[0],
                 location=tournament_infos[1],
-                number_of_turns=tournament_infos[2],
+                number_of_turns=int(tournament_infos[2]),
                 description=tournament_infos[3],
                 time_control=tournament_infos[4]
             )
@@ -96,6 +98,7 @@ class MatchResultController:
     """
     This controller allows to write results and save in the database.
     """
+
     def __init__(self):
         self.round_view = RoundView()
         self.match_view = MatchView()
@@ -119,10 +122,7 @@ class MatchResultController:
         self.round_view.display_if_round_over(left_matches)
         if left_matches > 0:
             if left_matches == 1:
-                self.tournament.update_end_round()
-                if self.tournament.left_round == 0:
-                    self.tournament.is_active = False
-                    self.tournament.save_in_db()
+                self.check_if_tournament_is_over(left_matches)
             pairs = self.tournament.matches_not_played(pairs)
         else:
             pairs = self.tournament.sorted_pairs(self.players)
@@ -133,27 +133,45 @@ class MatchResultController:
         pairs = self.tournament.matches_not_played(pairs)
         self.match_view.display_matches(self.tournament.get_name_from_ids(pairs))
 
-        pair_played_choice = self.match_view.get_match_played()
+        pair_played_choice = int(self.match_view.get_match_played())
         pair = pairs[pair_played_choice]
         self.tournament.add_matches_in_tournament(pair)
 
+        self.set_point(pair)
+
+        return HomeMenuController()
+
+    def check_if_tournament_is_over(self, left_matches):
+        """
+        Check if the tournament has left rounds if there is no left round, the tournament switches off to False for
+        "is_active" and it means the tournament is over.
+        """
+        if left_matches == 1:
+            self.tournament.update_end_round()
+            if self.tournament.left_round == 0:
+                self.tournament.is_active = False
+                self.tournament.save_in_db()
+
+    def set_point(self, pair):
+        """
+        Attribute points to each foe if it is a draw, the result of the match is a "D"
+        """
         draw = self.match_view.ask_if_draw()
 
         if draw == 'N':
-            winner = self.match_view.get_the_winner()
+            winner = int(self.match_view.get_the_winner())
             self.tournament.winner_match(winner)
             self.tournament.create_match(pair, winner)
         else:
             self.tournament.draw_match(pair)
             self.tournament.create_match(pair, "D")
 
-        return HomeMenuController()
-
 
 class ChangeRankController:
     """
     This controller changes the rank of the player form his first name and his last name
     """
+
     def __init__(self):
         self.player = PlayerView()
         self.db = Database()
@@ -161,7 +179,7 @@ class ChangeRankController:
     def __call__(self):
         player_info = self.player.get_first_name_last_name()
         player = Player(first_name=player_info[0], last_name=player_info[1])
-        player.update_rank(player_info[2])
+        player.update_rank(int(player_info[2]))
         return HomeMenuController()
 
 
@@ -169,12 +187,13 @@ class ReportController:
     """
     Check the right choice to get the report
     """
+
     def __init__(self):
         self.report_view = ReportView()
         self.db = Database()
 
     def __call__(self):
-        choice = self.report_view.report_choice()
+        choice = int(self.report_view.report_choice())
         if choice in [1, 2, 5]:
             report = self.get_report(choice)
         else:

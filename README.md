@@ -19,10 +19,18 @@ Python 3
 
 # Installation
 
+On Linux or Mac
 ```console
 pip install virtualenv
 virtualenv venv --python=python3
 source venv/bin/activate
+pip install -r requirements.txt
+```
+
+On Windows
+```console
+c:\Python38\python -m venv c:\path\to\myenv
+C:\\{venv}\\Scripts\\activate.bat
 pip install -r requirements.txt
 ```
 
@@ -43,4 +51,4 @@ flake8 --format=html --htmldir=flake8-report
 ```
 # Contributor
 
-Corentin Zheng is the contributor. But if you have any suggestions to improve the chess manager, you can create an issue.
+If you have any suggestions to improve the chess manager, you can create an issue.
